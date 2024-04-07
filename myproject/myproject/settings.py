@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8tnc=5@^i_*f1%g@ckdx@sbu3ln2u85g*4#uz3r-x5z0_j8x4$'
+SECRET_KEY = 'django-insecure-g0zqqpriytgff89o)bfkgeh$nrgl34!wor75)nf(#dehrb%n6z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -31,22 +31,14 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
-}
-
 INSTALLED_APPS = [
+    'blogs',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blogs',
     'rest_framework',
 ]
 
@@ -65,7 +57,7 @@ ROOT_URLCONF = 'myproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'blogs','templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,3 +124,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = '/blogs/posts/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'

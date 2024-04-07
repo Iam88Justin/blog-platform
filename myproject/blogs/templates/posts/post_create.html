@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create New Post</title>
+</head>
+<body>
+    <h1>Create New Post</h1>
+    <form id="post-form">
+        {% csrf_token %}
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+        <br>
+        <label for="content">Content:</label>
+        <textarea id="content" name="content" required></textarea>
+        <br>
+        <button type="submit">Create Post</button>
+    </form>
+    <script>
+        document.getElementById('post-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            fetch('/api/posts/', {
+                method: 'POST',
+                body: JSON.stringify(new FormData(document.getElementById('post-form')))
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Handle successful creation (e.g., redirect to post list)
+                console.log('Post created successfully:', data);
+                window.location.href = data.url;  // Redirect to the post detail page (assuming 'url' field in response)
+            })
+            .catch(error => {
+                console.error('Error creating post:', error);
+                // Handle errors (e.g., display error messages)
+            });
+        });
+    </script>
+</body>
+</html>

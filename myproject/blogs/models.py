@@ -16,9 +16,20 @@ class Post(models.Model):
     content = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=STATUS, default=0)
+    comment_set = models.ManyToManyField(User, through='Comment', related_name='comments_posted')
 
     class Meta:
         ordering = ['-created_on']
 
     def __str__(self):
         return self.title
+    
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    # Consider adding an author field (linked to User model)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+
+    
