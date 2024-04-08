@@ -149,9 +149,9 @@ def user_logout(request):
     logout(request)
     return Response(status=status.HTTP_200_OK)
     
+'''
 
-
-class CommentCreateAPIView(APIView):
+class CommentCreateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, slug):
@@ -164,3 +164,13 @@ class CommentCreateAPIView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Post.DoesNotExist:
             return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
+
+'''
+
+class CommentCreateView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)  # Set the current user as the author

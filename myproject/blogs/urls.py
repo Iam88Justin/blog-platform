@@ -10,6 +10,6 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
     path("posts/signup/", views.user_signup, name="signup"),
-    path('posts/<slug:slug>/comment/', views.CommentCreateAPIView.as_view(), name='comment'),
+    path('posts/<slug:slug>/comment/', views.CommentCreateView.as_view(), name='comment'),
 ]
 

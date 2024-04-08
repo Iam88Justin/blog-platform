@@ -1,26 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add Comment</title>
+  <title>Add Comment</title>
 </head>
 <body>
-    <h1>Add Comment</h1>
+  <h1>Add Comment to "{{ post.title }}"</h1>  {% if form.errors %}
+    <p style="color: red;">Please correct the following errors:</p>
+    <ul>
+      {% for error in form.errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 
-    {% if form.errors %}
-        <p style="color: red;">Please correct the following errors:</p>
-        <ul>
-            {% for error in form.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+  <form id="comment-form">
+    {% csrf_token %}
+    {{ form.as_p }}  <button type="submit">Submit Comment</button>
+  </form>
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit Comment</button>
-    </form>
-
-    <a href="{% url 'post-list' %}">Back to post list</a>
+  <script>
+    document.getElementById('comment-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      fetch(`/api/posts/<slug:post.slug>/comment/`, {  method: 'POST',
+        body: JSON.stringify(new FormData(document.getElementById('comment-form')))
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Handle successful comment creation (e.g., redirect to post detail)
+        console.log('Comment created successfully:', data);
+        window.location.href = data.url;  // Redirect to the post detail page (assuming 'url' field in response)
+      })
+      .catch(error => {
+        console.error('Error creating comment:', error);
+        // Handle errors (e.g., display error messages)
+      });
+    });
+  </script>
 </body>
 </html>
