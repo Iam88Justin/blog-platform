@@ -2,6 +2,9 @@
 This project is a take-home project from Unified-Sentinel-Data-Networks. This is a blog platform where users can read and write blog posts. The system allow users to register, log in, create, edit, and delete their blog posts with additional features. 
 Further details about the project is in Problem.md 
 
+# Dependencies:
+- Django 3.0+
+
 # Functionalities
 ## User Registration and Authentication: 
 Implement user registration, login, and logout functionality.
@@ -15,17 +18,17 @@ Allow users to create, edit, and delete their blog posts. Each post have fields 
 ## Run server
 Get to ./myproject directory run command: python manage.py runserver
 
-## User interface
-http://127.0.0.1:8000/blogs/posts/signup/ to create an account first
-http://127.0.0.1:8000/accounts/login/ to login in to account
-http://127.0.0.1:8000/blogs/posts to go to home list page
+## Authentication links
+- http://127.0.0.1:8000/blogs/posts/signup/ to create an account first
+- http://127.0.0.1:8000/accounts/login/ to login in to account
+- http://127.0.0.1:8000/blogs/posts to go to home list page
 
-
-http://127.0.0.1:8000/blogs/posts/create/ to create post
-http://127.0.0.1:8000/blogs/<slug:slug>/ to view specific post
-http://127.0.0.1:8000/blogs/posts/<slug:slug>/delete/ to delete specific post
-http://127.0.0.1:8000/blogs/posts/create/ to create post
-http://127.0.0.1:8000/blogs/posts/<slug:slug>/edit/ to edit post
+## Post links
+- http://127.0.0.1:8000/blogs/posts/create/ to create post
+- http://127.0.0.1:8000/blogs/<slug:slug>/ to view specific post
+- http://127.0.0.1:8000/blogs/posts/<slug:slug>/delete/ to delete specific post
+- http://127.0.0.1:8000/blogs/posts/create/ to create post
+- http://127.0.0.1:8000/blogs/posts/<slug:slug>/edit/ to edit post
 
 
 Comment section is still in work
