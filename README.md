@@ -30,8 +30,10 @@ Get to ./myproject directory run command: python manage.py runserver
 - http://127.0.0.1:8000/blogs/posts/create/ to create post
 - http://127.0.0.1:8000/blogs/posts/<slug:slug>/edit/ to edit post
 
-For specific post action, choose html form tab then fill in the information
+## Additional features
+- http://127.0.0.1:8000/blogs/posts/<slug:slug>/comment/ to add comments to post
+
+For specific post action, choose html form tab then fill in the information to submit
 
 
-Comment section is still in work
 
