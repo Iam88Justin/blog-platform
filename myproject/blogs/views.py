@@ -6,8 +6,6 @@ from .serializers import PostSerializer, CommentSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate, login, logout 
 from .forms import SignupForm, LoginForm
-from django.urls import reverse_lazy
-
 
 class PostListAPIView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
@@ -36,17 +34,36 @@ class PostDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
             return Post.objects.get(slug=slug)
         except Post.DoesNotExist:
             return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
+        
 
 
-    def get(self, request, slug, *args, **kwargs):
-        post = self.retrieve(request, slug, *args, **kwargs)
-        context = {'post': post.data}  # Create context for the template
-        return render(request, 'posts/post_detail.html', context)  # Render the template
+    def get(self, request, slug):
+        try:
+            post = Post.objects.get(slug=slug)
+        except Post.DoesNotExist:
+            return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PostSerializer(post)
+        comments = post.comments.all()
+        serialized_comments = CommentSerializer(comments, many=True).data  # Serialize with many=True
+        context = {'serializer': serializer.data, 'comments': serialized_comments}
+        #print(context['comments'], flush=True)
+
+        return render(request, 'posts/post_detail.html', context)
     
     def destroy(self, request, slug=None, *args, **kwargs):
         instance = self.get_object()  # Retrieve post object
         self.perform_destroy(instance)  # Delete the post
         return Response(status=status.HTTP_204_NO_CONTENT)
+'''
+
+    def get(self, request, slug, *args, **kwargs):
+        post = self.retrieve(request, slug, *args, **kwargs)
+        context = {'post': post.data}  # Create context for the template
+        return render(request, 'posts/post_detail.html', context)  # Render the template
+
+'''
+
 
 
 class PostDeleteAPIView(generics.DestroyAPIView):
@@ -149,28 +166,23 @@ def user_logout(request):
     logout(request)
     return Response(status=status.HTTP_200_OK)
     
-'''
-
-class CommentCreateView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, slug):
-        try:
-            post = Post.objects.get(slug=slug)
-            serializer = CommentSerializer(data=request.data)  # Assuming CommentSerializer is defined elsewhere
-            if serializer.is_valid():
-                serializer.save(post=post, author=request.user)  # Set post and current user as author
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except Post.DoesNotExist:
-            return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
-
-'''
 
 class CommentCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
+    def get_queryset(self):
+        # No need to define queryset here, as comments are created without pre-filtering
+        print(' ')
+
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)  # Set the current user as the author
+        # Capture the post slug from the URL
+        slug = self.kwargs.get('slug')
+        try:
+            post = Post.objects.get(slug=slug)
+        except Post.DoesNotExist:
+            return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Associate the post with the comment before saving
+        serializer.save(author=self.request.user, post=post)
+        return super().perform_create(serializer)
